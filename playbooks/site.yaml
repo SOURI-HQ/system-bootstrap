@@ -1,0 +1,24 @@
+---
+- name: Setup Linux environment
+  hosts: all
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Print setup info
+      ansible.builtin.debug:
+        msg: "Setting up {{ inventory_hostname }} in group {{ group_names }}"
+
+  tasks:
+    - name: Run packages playbook
+      ansible.builtin.include_tasks: packages.yaml
+
+    - name: Run users playbook
+      ansible.builtin.include_tasks: users.yaml
+
+    - name: Run dotfiles playbook
+      ansible.builtin.include_tasks: dotfiles.yaml
+
+    - name: Run services playbook
+      ansible.builtin.include_tasks: services.yaml
+      

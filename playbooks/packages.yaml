@@ -1,0 +1,6 @@
+---
+# Install system packages and software
+
+- name: Packages
+  ansible.builtin.debug:
+    msg: "No packages configured yet"

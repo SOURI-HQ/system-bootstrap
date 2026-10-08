@@ -1,0 +1,34 @@
+---
+# Corporate environment variables (Ubuntu)
+# These apply only to hosts in "corporate" group
+
+# Package manager for Ubuntu
+package_manager: apt
+
+essential_packages:
+  - git
+  - vim
+  - stow
+  - tmux
+
+desktop_packages:
+  - gnome-tweaks
+  - gnome-shell-extensions
+
+application_packages:
+  - libreoffice
+  - vlc
+  - git-crypt
+  - python3-venv
+  - protonmail-bridge
+  - proton-pass
+  - keepassxc
+  - firefox
+  - obsidian
+  - teams-for-linux
+  - outlook-electron
+  - globalprotect
+
+# Note: teams-for-linux requires .deb from GitHub or Snap
+# Note: outlook-electron requires manual download
+# Note: globalprotect requires manual config after install

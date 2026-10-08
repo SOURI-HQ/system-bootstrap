@@ -1,0 +1,6 @@
+---
+# Deploy configuration files (dotfiles)
+
+- name: Dotfiles
+  ansible.builtin.debug:
+    msg: "No dotfiles configured yet"

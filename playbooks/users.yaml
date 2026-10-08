@@ -1,0 +1,6 @@
+---
+# Configure users, groups, and SSH keys
+
+- name: Users
+  ansible.builtin.debug:
+    msg: "No users configured yet"
