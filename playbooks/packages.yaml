@@ -1,6 +1,29 @@
 ---
 # Install system packages and software
 
-- name: Packages
-  ansible.builtin.debug:
-    msg: "No packages configured yet"
+- name: Install essential tools
+  ansible.builtin.package:
+    name: "{{ essential_packages}}"
+    state: present
+  tags:
+    - packages
+    - essential
+
+- name: Install desktop environment packages
+  ansible.builtin.package:
+    name: "{{ desktop_packages }}"
+    state: present
+  tags:
+    - packages
+    - desktop
+  when: desktop_packages is defined
+
+- name: Install application
+  ansible.builtin.package:
+    name: "{{ application_packages }}"
+    state: present
+  tags:
+    - packages
+    - applications
+  when: application_packages is defined
+  

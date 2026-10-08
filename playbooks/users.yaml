@@ -1,6 +1,39 @@
 ---
 # Configure users, groups, and SSH keys
 
-- name: Users
+- name: Configure sudo NOPASSWD
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    line: 'ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+    state: present
+  tags:
+    - users
+    - sudo
+
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: ~/.ssh
+    state: directory
+    mode: '0700'
+  tags:
+    - users
+    - ssh
+
+- name: Note about SSH keys (corporate)
   ansible.builtin.debug:
-    msg: "No users configured yet"
+    msg: "SSH keys must be restored from external drive. Keys should be placed in ~/.ssh/ with proper permissions"
+  when: "'corporate' in group_names"
+  tags:
+    - users
+    - ssh
+
+  
+- name: Note about GPG keys (corporate)
+  ansible.builtin.debug:
+    msg: "GPG keys must be restored from external drive. Keys should be imported"
+  when: "'corporate' in group_names"
+  tags:
+    - users
+    - gpg
+    
