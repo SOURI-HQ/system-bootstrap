@@ -32,4 +32,143 @@
       tags:
         - gnome
         - corporate
+
+    - name: Enable Gnome extensions (Corporate)
+      ansible.builtin.command:
+        cmd: gsettings set org.gnome.shell enabled-extensions "['user-theme@gnome-shell-extensions.gcampax.github.com', 'dash-to-panel@jderose9.github.com']"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Display panels on all monitors OFF (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/multi-monitors "false"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Intellihide ON (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/intellihide "true"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - icon margin (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/appicon-margin "4"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - do not sync monitor settings (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/panel-element-positions-monitors-sync "false"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Panel thickness 48px (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/panel-sizes '{"0":48}'
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Border radius 0px (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/global-border-radius "0"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
         
+    - name: Configure Dash to Panel - Animate hover ON, Simple, 100ms (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/animate-appicon-hover "true"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Animation duration 100ms (Corporate)
+      ansible.builtin.shell:
+        cmd: "dconf write /org/gnome/shell/extensions/dash-to-panel/animate-appicon-hover-animation-duration \"{'SIMPLE': <uint32 100>, 'RIPPLE': <uint32 130>, 'PLANK': <uint32 100>}\""
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Icon style NORMAL (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/appicon-style "'NORMAL'"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Running indicator FOCUSED dashes (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/dot-style-focused "'DASHES'"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Running indicator UNFOCUSED dashes (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/dot-style-unfocused "'DASHES'"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Configure Dash to Panel - Keep original top panel ON (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/dash-to-panel/stockgs-keep-top-panel "true"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
+
+    - name: Set User Theme name (Corporate)
+      ansible.builtin.shell:
+        cmd: dconf write /org/gnome/shell/extensions/user-theme/name "''"
+      when: "'corporate' in group_names"
+      failed_when: false
+      tags:
+        - gnome
+        - extensions
+        - corporate
