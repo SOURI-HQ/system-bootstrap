@@ -1,6 +1,45 @@
 ---
 # Deploy configuration files (dotfiles)
 
-- name: Dotfiles
-  ansible.builtin.debug:
-    msg: "No dotfiles configured yet"
+- name: Deploy dotfiles
+  hosts: all
+  become: false
+  tasks:
+    - name: Create stow configuration
+      ansible.builtin.copy:
+        dest: ~/.stowrc
+        content: |
+          --no-folding
+          --override=CONFIG
+          -d ~/Documents/repositories/dotfiles
+          -t ~
+        mode: '0644'
+        owner: "{{ ansible_user_id }}"
+      tags:
+        - dotfiles
+
+    - name: Clone dotfiles repository
+      ansible.builtin.git:
+        repo: git@github.com:SOURI-HQ/dotfiles
+        dest: ~/Documents/repositories/dotfiles
+        version: main
+      tags:
+        - dotfiles
+
+    - name: Deploy dotfiles with stow
+      ansible.builtin.shell:
+        cmd: cd ~/Documents/repositories/dotfiles && stow --verbose=2 .
+      register: stow_result
+      changed_when: "'LINK' in stow_result.stdout"
+      tags:
+        - dotfiles
+
+    - name: Restore tmux plugins directory
+      ansible.builtin.copy:
+        src: /mnt/backup/dotfiles/tmux/plugins/
+        dest: ~/.tmux/plugins/
+        remote_src: true
+        directory_traverse: 0755
+        files: 0644
+      tags:
+        - dotfiles

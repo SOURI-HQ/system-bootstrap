@@ -1,6 +1,35 @@
 ---
 # Configure system services and daemons
 
-- name: Services
-  ansible.builtin.debug:
-    msg: "No services configured yet"
+- name: Services configuration
+  hosts: all
+  become: false
+  tasks:
+    - name: Enable dark theme
+      ansible.builtin.command:
+        cmd: gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+      tags:
+        - gnome
+    
+    - name: Set wallpaper
+      ansible.builtin.command:
+        cmd: gsettings set org.gnome.desktop.background picture-uri 'file:///usr/share/backgrounds/ubuntu-wallpaper-d.png'
+      when: "'corporate' in group_names"
+      tags:
+        - gnome
+        - corporate
+
+    - name: Disable mouse acceleration
+      ansible.builtin.command:
+        cmd: gsettings set org.gnome.desktop.peripherals.mouse accel-profile 'flat'
+      tags:
+        - gnome
+
+    - name: Set shortcut to open Home folder
+      ansible.builtin.command:
+        cmd: gsettings set org.gnome.settings-daemon.plugins.media-keys home '<Super>e'
+      when: "'corporate' in group_names"
+      tags:
+        - gnome
+        - corporate
+        

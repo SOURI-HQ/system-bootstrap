@@ -1,39 +1,48 @@
 ---
 # Configure users, groups, and SSH keys
 
-- name: Configure sudo NOPASSWD
-  ansible.builtin.lineinfile:
-    path: /etc/sudoers
-    line: 'ALL=(ALL) NOPASSWD: ALL'
-    validate: 'visudo -cf %s'
-    state: present
-  tags:
-    - users
-    - sudo
+- name: Configure users
+  hosts: all
+  become: true
+  tasks:
+    - name: Configure sudo NOPASSWD
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        line: 'ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+        state: present
+      tags:
+        - users
+        - sudo
 
-- name: Ensure .ssh directory exists
-  ansible.builtin.file:
-    path: ~/.ssh
-    state: directory
-    mode: '0700'
-  tags:
-    - users
-    - ssh
+    - name: Ensure .ssh directory exists
+      ansible.builtin.file:
+        path: ~/.ssh
+        state: directory
+        mode: '0700'
+      tags:
+        - users
+        - ssh
 
-- name: Note about SSH keys (corporate)
-  ansible.builtin.debug:
-    msg: "SSH keys must be restored from external drive. Keys should be placed in ~/.ssh/ with proper permissions"
-  when: "'corporate' in group_names"
-  tags:
-    - users
-    - ssh
+    - name: Restore SSH keys
+      ansible.builtin.copy:
+        src: /mnt/backup/secret_material/ssh_keys
+        dest: ~/.ssh
+        remote_src: true
+        mode: '0600'
+        owner: "{{ ansible_user_id }}"
+      when: "'corporate' in group_names"
+      tags:
+        - users
+        - ssh
+        - corporate
 
-  
-- name: Note about GPG keys (corporate)
-  ansible.builtin.debug:
-    msg: "GPG keys must be restored from external drive. Keys should be imported"
-  when: "'corporate' in group_names"
-  tags:
-    - users
-    - gpg
-    
+    - name: Restore GPG keys
+      ansible.builtin.shell:
+        cmd: gpg --import /mnt/backup/secret_material/gpg_keys/*.gpg
+      when: "'corporate' in group_names"
+      tags:
+        - users
+        - gpg
+        - corporate
+        
