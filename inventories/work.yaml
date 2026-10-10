@@ -1,7 +1,7 @@
 all:
   children:
-    corporate:
+    work:
       hosts:
-        corporate-laptop:
+        work-laptop:
           ansible_host: 192.168.1.x
           ansible_user: username

@@ -1,0 +1,128 @@
+- name: Install Docker Engine (Work)
+  hosts: all
+  become: true
+  tasks:
+    - name: Uninstall conflicting Docker packages
+      ansible.builtin.package:
+        name:
+          - docker.io
+          - docker.doc
+          - docker.compose
+          - docker.compose-v2
+          - podman-docker
+          - containerd
+          - runc
+        state: absent
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Install prerequisites for Docker repository
+      ansible.builtin.package:
+        name:
+          - ca-certificates
+          - curl
+        state: present
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Create Docker keyrings directory
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+    
+    - name: Download Docker's official GPG key (Work)
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Set permissions on Docker GPG key (Work)
+      ansible.builtin.file:
+        path: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Add Docker repository to apt sources (Work)
+      ansible.builtin.copy:
+        dest: /etc/apt/sources.list.d/docker.sources
+        content: |
+          Types: deb
+          URIs: https://download.docker.com/linux/ubuntu
+          Suites: {{ ansible_distribution_release }}
+          Components: stable
+          Architectures: {{ ansible_architecture | regex_replace('x86_64', 'amd64') | regex_replace('aarch64', 'arm64') }}
+          Signed-By: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Update apt cache after adding Docker repository (Work)
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Install Docker Engine packages (Work)
+      ansible.builtin.package:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Verify Docker installation with hello-world (Work)
+      ansible.builtin.command:
+        cmd: docker run --rm hello-world
+      register: docker_hello
+      changed_when: false
+      failed_when: false
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Display Docker hello-world output (Work)
+      ansible.builtin.debug:
+        var: docker_hello.stdout_lines
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+
+    - name: Add user to docker group (Work)
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: yes
+      when: "'work' in group_names"
+      tags:
+        - docker
+        - work
+        

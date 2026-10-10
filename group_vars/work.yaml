@@ -1,0 +1,36 @@
+---
+# Work environment variables (Ubuntu)
+# These apply only to hosts in "work" group
+
+# Package manager for Ubuntu
+package_manager: apt
+
+develop_packages:
+  - git
+  - git-crypt
+  - code
+  - python3-venv
+  - ansible-playbook
+
+tool_packages:
+  - vim
+  - stow
+  - tmux
+  - wl-clipboard
+  - curl
+  - htop
+  - gpg
+
+desktop_packages:
+  - gnome-tweaks
+  - gnome-shell-extensions
+
+application_packages:
+  - libreoffice
+  - vlc
+  - protonmail-bridge
+  - proton-pass
+  - keepassxc
+  - firefox
+  - obsidian
+  - teams-for-linux
